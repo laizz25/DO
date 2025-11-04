@@ -1,263 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Decolonising Ourselves — Bingo Question Draw</title>
-<style>
-  :root{
-    --bg:#faf6f1; --panel:#fffdf9; --ink:#2c2a28; --muted:#6b665f;
-    --green:#2f6f6a; --terra:#c47a5a; --sand:#9c8b6e; --sea:#7fb3ad;
-    --shadow: 0 14px 40px rgba(0,0,0,.08);
-    --radius: 22px;
-  }
-  *{box-sizing:border-box}
-  body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-       color:var(--ink); background: var(--bg);}
-  .wrap{max-width:1120px; margin:22px auto; padding: 0 18px;}
-  .badge{display:inline-block;background:#e6f2f0;color:var(--green);padding:6px 10px;border-radius:999px;
-         font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
-  h1{margin:8px 0 2px;font-size: clamp(24px,3.2vw,38px); line-height:1.1}
-  .subtitle{color:var(--muted); margin:0 0 18px}
-  .grid{display:grid;grid-template-columns:2fr 1fr; gap:18px;}
-  @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
-  .card{background: var(--panel); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px;}
-  .controls{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px}
-  .btn{appearance:none;border:0;border-radius:16px;padding:12px 18px;font-weight:900;letter-spacing:.2px;
-       display:inline-flex;align-items:center;gap:10px;cursor:pointer;transition:transform .05s ease, filter .2s ease;}
-  .btn:active{ transform: translateY(1px) scale(.995); }
-  .btn.primary{ background: var(--green); color: white; box-shadow: 0 8px 22px rgba(47,111,106,.22); }
-  .btn.ghost{ background: white; color: var(--green); border: 2px solid var(--green); }
-  .btn.warn{ background: var(--terra); color: white; box-shadow: 0 8px 22px rgba(196,122,90,.22); }
-  .btn.timer{ background: #e9edea; color: #46605e; border:2px solid #ccdad8; }
-  .btn[disabled]{ filter: grayscale(.6) opacity(.65); cursor:not-allowed; }
-  .hint{ color: var(--muted); font-size: 13px; margin: 8px 4px 14px; }
-
-  .stage{ display:grid; gap:16px; }
-  .drum{
-    position: relative;
-    margin: 4px auto 0;
-    width: min(360px, 52vw);
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ffffff, #edf6f5 60%);
-    border: 10px solid #d4e7e3;
-    display: grid; place-items: center;
-    box-shadow: inset 0 0 0 12px #f3faf9, 0 10px 28px rgba(0,0,0,.06);
-  }
-  .drum:before{
-    content:"";
-    position:absolute; inset: 12px;
-    border-radius:50%;
-    border: 3px dashed #cfe2de;
-  }
-  .numBig{
-    font-size: min(120px, 18vw);
-    font-weight: 900; color: var(--green);
-    line-height:1;
-    text-shadow: 0 3px 0 rgba(0,0,0,.06);
-  }
-  /* Spin animation */
-  .spinning{ animation: spinGlow .9s ease-in-out infinite alternate; }
-  @keyframes spinGlow {
-    0% { filter: brightness(1) saturate(1); transform: scale(1); }
-    100% { filter: brightness(1.15) saturate(1.1); transform: scale(1.02); }
-  }
-
-  .qBox{
-    border:2px dashed #e7ded4; border-radius: 16px; background: white;
-    padding: clamp(16px,2.2vw,22px); min-height: 120px;
-    display:flex; align-items:center; justify-content:center; text-align:center;
-  }
-  .qTitle{ font-weight: 900; color: var(--terra); margin-bottom: 6px; letter-spacing:.3px; text-transform: uppercase; font-size: 14px;}
-  .qText{ font-size: clamp(18px,2.2vw,26px); font-weight: 800; line-height:1.25; }
-  .timer{ height: 12px; background: #ebe3da; border-radius: 999px; overflow:hidden; }
-  .timer > span{ display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--green), var(--terra)); }
-
-  .side h3{ margin: 6px 0 10px; font-size: 14px; letter-spacing:.35px; color: var(--muted); text-transform: uppercase;}
-  .numbers{ display:grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-  .chip{ background: #dcedea; color: #2b5e59; font-weight: 900; border-radius: 14px; padding: 10px 0; text-align:center; }
-  .chip.used{ background: #efe7df; color: #a59a8e; text-decoration: line-through; }
-
-  footer{ margin-top: 12px; color: var(--muted); font-size: 12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
-  kbd{ background:#f1ece6; border:1px solid #e3dbd3; border-bottom-width:2px; border-radius:6px; padding:2px 6px; font-weight:800; }
-</style>
+  <meta charset="UTF-8" />
+  <title>Decolonising Ourselves Bingo Drawer</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+    body {
+      background: #111827;
+      color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #1f2937;
+      padding: 24px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 900px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    }
+    h1 { text-align: center; margin-bottom: 16px; font-size: 1.6rem; }
+    .display {
+      text-align: center;
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .number { font-size: 4rem; font-weight: bold; margin: 10px 0; color: #22c55e; }
+    .question { font-size: 1rem; min-height: 80px; margin: 10px 0; line-height: 1.5; }
+    .timer { font-size: 2rem; margin-top: 8px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .cell {
+      background: #374151;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    .drawn { background: #4b5563; text-decoration: line-through; color: #9ca3af; }
+    .current { background: #22c55e; color: #064e3b; font-weight: bold; }
+    .shortcuts {
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <span class="badge">Reflection Activity</span>
-    <h1>Decolonising Ourselves — Bingo Draw</h1>
-    <p class="subtitle">Draw a number → Reveal → <b>Start timer manually</b> • No repeats.</p>
-
-    <div class="grid">
-      <section class="card stage">
-        <div class="controls">
-          <button id="drawBtn"    class="btn primary">🎲 Draw Number</button>
-          <button id="revealBtn"  class="btn ghost" disabled>👁️ Reveal Question</button>
-          <button id="startBtn"   class="btn timer" disabled>▶️ Start Timer</button>
-          <button id="resetBtn"   class="btn warn">♻️ Reset</button>
-        </div>
-        <div class="hint">Shortcuts: <kbd>Space</kbd> draw • <kbd>Enter</kbd> reveal • <kbd>T</kbd> start timer • <kbd>R</kbd> reset</div>
-
-        <!-- Lottery drum -->
-        <div id="drum" class="drum">
-          <div id="numBig" class="numBig">—</div>
-        </div>
-
-        <div class="qBox" aria-live="polite">
-          <div>
-            <div id="qTitle" class="qTitle">Question</div>
-            <div id="qText"  class="qText">Draw a number first to reveal its matching reflection prompt.</div>
-          </div>
-        </div>
-        <div class="timer"><span id="tbar"></span></div>
-      </section>
-
-      <aside class="card">
-        <h3>Numbers (1–20)</h3>
-        <div id="nums" class="numbers"></div>
-      </aside>
+  <div class="container">
+    <h1>🪶 Decolonising Ourselves – Bingo Drawer</h1>
+    <div class="display">
+      <div>Current Number:</div>
+      <div id="numberDisplay" class="number">–</div>
+      <div id="questionDisplay" class="question">Press Space to draw the first number.</div>
+      <div id="timer" class="timer"></div>
     </div>
 
-    <footer>
-      <div>Facilitation tip: Only those with the drawn number share for ~30s. No right or wrong — be honest.</div>
-      <div><kbd>Space</kbd> draw • <kbd>Enter</kbd> reveal • <kbd>T</kbd> timer • <kbd>R</kbd> reset</div>
-    </footer>
+    <div class="grid" id="grid"></div>
+
+    <div class="shortcuts">
+      <p><b>Space:</b> Draw new number | <b>Enter:</b> Reveal question | <b>T:</b> Start 30s timer</p>
+    </div>
   </div>
 
-<script>
-  // Questions (1..20)
-  const Q=[
-    "What is one new thing you learned about colonisation or cultural safety today?",
-    "How did this topic change the way you think about your own culture or background?",
-    "Why do you think it’s important for us to talk about decolonisation in healthcare?",
-    "What surprised you the most from today’s presentation?",
-    "Can you think of a movement when you realised that "one way of doing things" isn't always right for everyone?",
-    "What does respect mean to you when working with people from a different culture?",
-    "How can we make sure we are open-minded when learning from Indigenous people?",
-    "What does a culturally safe conversation look or sound like to you?",
-    "How can an OT show that they value a client’s culture and knowledge?",
-    "Why is it important to ask clients what goals they want instead of deciding for them?",
-    "How could you work with Elders or Aboriginal Health Workers in your future practice?",
-    "What might make a client feel unsafe or uncomfortable in a service, and how could we change that?",
-    "What does “sharing power” between professionals and clients mean in your own words?",
-    "How can we use listening and yarning to build better trust?",
-    "Why is having Aboriginal-led services important for communities?",
-    "How does connecting to a country or culture help people feel healthy and strong?",
-    "What can organisations do to make sure Indigenous voices are included in decision-making?",
-    "How can non-Indigenous and Indigenous people learn from each other?",
-    "What does real equality look like in healthcare or education?",
-    "What is one small action you can take to help decolonise yourself — at uni, in practice, or in daily life?"
-  ];
+  <script>
+    const questions = {
+      1: "What is one new thing you learned about colonisation or cultural safety today?",
+      2: "How did this topic change the way you think about your own culture or background?",
+      3: "Why do you think it’s important for us to talk about decolonisation in healthcare?",
+      4: "What surprised you the most from today’s presentation?",
+      5: "Can you think of a moment when you realised that “one way of doing things” isn’t always right for everyone?",
+      6: "What does respect mean to you when working with people from a different culture?",
+      7: "How can we make sure we are open-minded when learning from Indigenous people?",
+      8: "What does a culturally safe conversation look or sound like to you?",
+      9: "How can an OT show that they value a client’s culture and knowledge?",
+      10: "Why is it important to ask clients what goals they want instead of deciding for them?",
+      11: "How could you work with Elders or Aboriginal Health Workers in your future practice?",
+      12: "What might make a client feel unsafe or uncomfortable in a service, and how could we change that?",
+      13: "What does “sharing power” between professionals and clients mean in your own words?",
+      14: "How can we use listening and yarning to build better trust?",
+      15: "Why is having Aboriginal-led services important for communities?",
+      16: "How does connecting to a country or culture help people feel healthy and strong?",
+      17: "What can organisations do to make sure Indigenous voices are included in decision-making?",
+      18: "How can non-Indigenous and Indigenous people learn from each other?",
+      19: "What does real equality look like in healthcare or education?",
+      20: "What is one small action you can take to help decolonise yourself — at uni, in practice, or in daily life?"
+    };
 
-  // Elements
-  const drawBtn  = document.getElementById('drawBtn');
-  const revealBtn= document.getElementById('revealBtn');
-  const startBtn = document.getElementById('startBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const numBig   = document.getElementById('numBig');
-  const drum     = document.getElementById('drum');
-  const qTitle   = document.getElementById('qTitle');
-  const qText    = document.getElementById('qText');
-  const tbar     = document.getElementById('tbar');
-  const nums     = document.getElementById('nums');
+    const numberDisplay = document.getElementById('numberDisplay');
+    const questionDisplay = document.getElementById('questionDisplay');
+    const timerDisplay = document.getElementById('timer');
+    const grid = document.getElementById('grid');
+    let remaining = Array.from({length: 20}, (_, i) => i + 1);
+    let current = null;
+    let revealed = false;
+    let timer = null;
+    let timeLeft = 30;
 
-  // State
-  let left = Array.from({length:20},(_,i)=>i+1);
-  let pending = null;
-  let spinId = null, timerId = null;
-
-  // Build number chips
-  const chips=[];
-  for(let i=1;i<=20;i++){
-    const d=document.createElement('div');
-    d.className='chip';
-    d.textContent=i;
-    nums.appendChild(d);
-    chips[i]=d;
-  }
-
-  function drawNumber(){
-    if (pending!==null) return; // already spinning or waiting to reveal
-    if (left.length===0){ numBig.textContent='✓'; return; }
-
-    // Spin animation: rapidly change number for 1.2s, then settle
-    drum.classList.add('spinning');
-    let t=0;
-    spinId = setInterval(()=>{
-      const r = left[Math.floor(Math.random()*left.length)];
-      numBig.textContent = r;
-      t+=60;
-      if (t>=1200){
-        clearInterval(spinId); spinId=null;
-        // choose final index
-        const i = Math.floor(Math.random()*left.length);
-        pending = left[i]; // do not remove yet
-        numBig.textContent = pending;
-        drum.classList.remove('spinning');
-        qTitle.textContent='Question';
-        qText.textContent = 'Press “Reveal Question” (or Enter) to show the prompt for number ' + pending + '.';
-        revealBtn.disabled=false;
-      }
-    },60);
-  }
-
-  function revealQuestion(){
-    if (pending===null) return;
-    // consume number
-    const idx = left.indexOf(pending);
-    if (idx>-1) left.splice(idx,1);
-    chips[pending].classList.add('used');
-
-    qTitle.textContent = 'Question ' + pending;
-    qText.textContent  = Q[pending-1];
-
-    revealBtn.disabled=true;
-    startBtn.disabled=false;
-    pending=null;
-  }
-
-  function startTimer(ms=30000){
-    if (startBtn.disabled) return;
-    startBtn.disabled=true;
-    stopTimer();
-    const start = performance.now();
-    tbar.style.width='0%';
-    function tick(now){
-      const pct = Math.min(100, ((now-start)/ms)*100);
-      tbar.style.width = pct + '%';
-      if (pct<100) timerId = requestAnimationFrame(tick);
-      else timerId=null;
+    // Create grid
+    for (let i = 1; i <= 20; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.id = `cell-${i}`;
+      cell.textContent = i;
+      grid.appendChild(cell);
     }
-    timerId = requestAnimationFrame(tick);
-  }
-  function stopTimer(){ if (timerId){ cancelAnimationFrame(timerId); timerId=null; } }
 
-  function resetAll(){
-    stopTimer();
-    left = Array.from({length:20},(_,i)=>i+1);
-    pending = null;
-    numBig.textContent='—';
-    qTitle.textContent='Question';
-    qText.textContent='Draw a number first to reveal its matching reflection prompt.';
-    tbar.style.width='0%';
-    for(let i=1;i<=20;i++) chips[i].classList.remove('used');
-    revealBtn.disabled=true;
-    startBtn.disabled=true;
-  }
+    function updateGrid() {
+      for (let i = 1; i <= 20; i++) {
+        const c = document.getElementById(`cell-${i}`);
+        c.classList.toggle('drawn', !remaining.includes(i));
+        c.classList.toggle('current', i === current);
+      }
+    }
 
-  // Events
-  drawBtn.addEventListener('click', drawNumber);
-  revealBtn.addEventListener('click', revealQuestion);
-  startBtn.addEventListener('click', ()=>startTimer(30000));
-  resetBtn.addEventListener('click', resetAll);
+    function drawNumber() {
+      if (remaining.length === 0) {
+        numberDisplay.textContent = "✓";
+        questionDisplay.textContent = "All 20 questions used — great work!";
+        clearTimer();
+        return;
+      }
+      const i = Math.floor(Math.random() * remaining.length);
+      current = remaining.splice(i, 1)[0];
+      numberDisplay.textContent = current;
+      questionDisplay.textContent = "Press Enter to reveal the question.";
+      revealed = false;
+      clearTimer();
+      timerDisplay.textContent = "";
+      updateGrid();
+    }
 
-  window.addEventListener('keydown', (e)=>{
-    if (e.code==='Space'){ e.preventDefault(); drawNumber(); }
-    if (e.code==='Enter'){ revealQuestion(); }
-    if (e.key.toLowerCase()==='t'){ startTimer(30000); }
-    if (e.key.toLowerCase()==='r'){ resetAll(); }
-  });
-</script>
+    function revealQuestion() {
+      if (!current) return;
+      questionDisplay.textContent = questions[current];
+      revealed = true;
+    }
+
+    function clearTimer() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    function startTimer() {
+      if (!revealed) return;
+      clearTimer();
+      timeLeft = 30;
+      timerDisplay.textContent = timeLeft + "s";
+      timer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+          timerDisplay.textContent = "Time's up!";
+          clearTimer();
+        } else {
+          timerDisplay.textContent = timeLeft + "s";
+        }
+      }, 1000);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        drawNumber();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        revealQuestion();
+      } else if (e.key.toLowerCase() === 't') {
+        e.preventDefault();
+        startTimer();
+      }
+    });
+
+    updateGrid();
+  </script>
 </body>
 </html>
