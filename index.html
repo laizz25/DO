@@ -2,78 +2,335 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Decolonising Ourselves Bingo Drawer</title>
+  <title>Decolonising Ourselves — Bingo Draw</title>
   <style>
-    * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
     body {
-      background: #111827;
-      color: #f9fafb;
+      min-height: 100vh;
+      background: #f5efe3; /* warm earthy background */
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      color: #3f3a33;
+      padding: 24px;
+    }
+
+    .page {
+      width: min(1100px, 100%);
+      background: rgba(255, 252, 246, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+      padding: 24px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header */
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #7a7a6a;
+      margin-bottom: 6px;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #2c3b32;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #73685a;
+    }
+
+    /* Controls */
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f2e9dd;
+      color: #3f3a33;
+    }
+
+    .btn-primary {
+      background: #2f6f4e; /* deep green */
+      color: #fdfaf5;
+      border-color: #22533a;
+    }
+
+    .btn-outline {
+      background: #fdf8f1;
+      color: #3f3a33;
+      border-color: #d4c7b6;
+    }
+
+    .btn-danger {
+      background: #b85c32; /* earthy terracotta */
+      color: #fffaf3;
+      border-color: #944624;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .shortcuts {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #8a7c6b;
+    }
+
+    .shortcuts kbd {
+      border-radius: 4px;
+      border: 1px solid #c6b7a1;
+      padding: 1px 6px;
+      font-size: 0.78rem;
+      background: #fdf8f1;
+      margin: 0 2px;
+    }
+
+    /* Layout: left content + right numbers panel */
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 1.4fr);
+      gap: 24px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left panel */
+
+    .left-card {
+      background: #fffaf3;
+      border-radius: 20px;
+      border: 1px solid #e0d0bc;
+      padding: 22px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .circle-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
     }
-    .container {
-      background: #1f2937;
-      padding: 24px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+
+    .number-circle {
+      position: relative;
+      width: min(60vh, 360px);
+      height: min(60vh, 360px);
+      max-width: 360px;
+      max-height: 360px;
+      border-radius: 50%;
+      background: #f7efe1;
+      border: 2px solid #d5c4aa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #28523b;
     }
-    h1 { text-align: center; margin-bottom: 16px; font-size: 1.6rem; }
-    .display {
-      text-align: center;
-      background: #0f172a;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
+
+    .number-circle::before {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      border: 2px dashed #d5c4aa;
     }
-    .number { font-size: 4rem; font-weight: bold; margin: 10px 0; color: #22c55e; }
-    .question { font-size: 1rem; min-height: 80px; margin: 10px 0; line-height: 1.5; }
-    .timer { font-size: 2rem; margin-top: 8px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-top: 16px;
+
+    .current-number {
+      font-size: 4rem;
+      font-weight: 700;
+      z-index: 1;
     }
-    .cell {
-      background: #374151;
-      padding: 10px;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 1rem;
-    }
-    .drawn { background: #4b5563; text-decoration: line-through; color: #9ca3af; }
-    .current { background: #22c55e; color: #064e3b; font-weight: bold; }
-    .shortcuts {
-      text-align: center;
-      color: #9ca3af;
+
+    .timer {
       margin-top: 10px;
-      font-size: 0.85rem;
+      font-size: 1.1rem;
+      z-index: 1;
+      color: #83502d;
+    }
+
+    .timer.running {
+      font-weight: 600;
+    }
+
+    /* Question card */
+
+    .question-card {
+      width: 100%;
+      background: #fff8ee;
+      border-radius: 18px;
+      border: 1px dashed #e0c8a9;
+      padding: 16px 18px 18px;
+    }
+
+    .question-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #b26a38;
+      margin-bottom: 4px;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2f2922;
+      line-height: 1.5;
+      min-height: 48px;
+    }
+
+    /* Right panel */
+
+    .right-panel {
+      background: #fdf8f1;
+      border-radius: 20px;
+      border: 1px solid #e3d6c5;
+      padding: 18px 16px 18px;
+    }
+
+    .right-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #3b352e;
+      margin-bottom: 10px;
+    }
+
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .num-chip {
+      border-radius: 999px;
+      padding: 6px 0;
+      text-align: center;
+      font-size: 0.9rem;
+      background: #f5ecdf;
+      border: 1px solid #d7c6ae;
+      color: #3c342c;
+    }
+
+    .num-chip.drawn {
+      background: #e0d3c1;
+      color: #a1927f;
+      text-decoration: line-through;
+    }
+
+    .num-chip.current {
+      background: #2f6f4e;
+      color: #fffaf3;
+      border-color: #22533a;
+      font-weight: 600;
+    }
+
+    .used-text {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: #8a7c6b;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🪶 Decolonising Ourselves – Bingo Drawer</h1>
-    <div class="display">
-      <div>Current Number:</div>
-      <div id="numberDisplay" class="number">–</div>
-      <div id="questionDisplay" class="question">Press Space to draw the first number.</div>
-      <div id="timer" class="timer"></div>
+  <div class="page">
+    <div>
+      <div class="eyebrow">REFLECTION ACTIVITY</div>
+      <div class="title-row">
+        <h1>Decolonising Ourselves — Bingo Draw</h1>
+        <div class="subtitle">
+          Draw a number → Reveal → <strong>Start timer manually</strong> · No repeats.
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <button id="btnDraw" class="btn btn-primary">🎲 Draw Number</button>
+        <button id="btnReveal" class="btn btn-outline">👁 Reveal Question</button>
+        <button id="btnStartTimer" class="btn btn-outline">⏱ Start Timer</button>
+        <button id="btnReset" class="btn btn-danger">♻️ Reset</button>
+      </div>
+
+      <div class="shortcuts">
+        Shortcuts:
+        <kbd>Space</kbd> draw ·
+        <kbd>Enter</kbd> reveal ·
+        <kbd>T</kbd> start timer ·
+        <kbd>R</kbd> reset
+      </div>
     </div>
 
-    <div class="grid" id="grid"></div>
+    <div class="main-layout">
+      <!-- LEFT: Circle + Question -->
+      <div class="left-card">
+        <div class="circle-wrapper">
+          <div class="number-circle">
+            <div id="numberDisplay" class="current-number">–</div>
+            <div id="timerDisplay" class="timer"></div>
+          </div>
+        </div>
 
-    <div class="shortcuts">
-      <p><b>Space:</b> Draw new number | <b>Enter:</b> Reveal question | <b>T:</b> Start 30s timer</p>
+        <div class="question-card">
+          <div class="question-label">Question</div>
+          <div id="questionDisplay" class="question-text">
+            Draw a number first to reveal its matching reflection prompt.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Numbers list -->
+      <aside class="right-panel">
+        <div class="right-title">Numbers (1–20)</div>
+        <div id="numbersGrid" class="numbers-grid"></div>
+        <div id="usedText" class="used-text"></div>
+      </aside>
     </div>
   </div>
 
   <script>
+    // Questions linked to numbers 1–20 (your text)
     const questions = {
       1: "What is one new thing you learned about colonisation or cultural safety today?",
       2: "How did this topic change the way you think about your own culture or background?",
@@ -97,69 +354,63 @@
       20: "What is one small action you can take to help decolonise yourself — at uni, in practice, or in daily life?"
     };
 
-    const numberDisplay = document.getElementById('numberDisplay');
-    const questionDisplay = document.getElementById('questionDisplay');
-    const timerDisplay = document.getElementById('timer');
-    const grid = document.getElementById('grid');
-    let remaining = Array.from({length: 20}, (_, i) => i + 1);
-    let current = null;
-    let revealed = false;
+    const numberDisplay = document.getElementById("numberDisplay");
+    const questionDisplay = document.getElementById("questionDisplay");
+    const timerDisplay = document.getElementById("timerDisplay");
+    const numbersGrid = document.getElementById("numbersGrid");
+    const usedText = document.getElementById("usedText");
+
+    const btnDraw = document.getElementById("btnDraw");
+    const btnReveal = document.getElementById("btnReveal");
+    const btnStartTimer = document.getElementById("btnStartTimer");
+    const btnReset = document.getElementById("btnReset");
+
+    let remaining = [];
+    let currentNumber = null;
+    let questionRevealed = false;
     let timer = null;
     let timeLeft = 30;
 
-    // Create grid
-    for (let i = 1; i <= 20; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      cell.id = `cell-${i}`;
-      cell.textContent = i;
-      grid.appendChild(cell);
+    // Build number chips
+    function buildGrid() {
+      numbersGrid.innerHTML = "";
+      for (let i = 1; i <= 20; i++) {
+        const chip = document.createElement("div");
+        chip.className = "num-chip";
+        chip.id = "num-" + i;
+        chip.textContent = i;
+        numbersGrid.appendChild(chip);
+      }
     }
 
     function updateGrid() {
       for (let i = 1; i <= 20; i++) {
-        const c = document.getElementById(`cell-${i}`);
-        c.classList.toggle('drawn', !remaining.includes(i));
-        c.classList.toggle('current', i === current);
+        const chip = document.getElementById("num-" + i);
+        const isRemaining = remaining.includes(i);
+        chip.classList.toggle("drawn", !isRemaining);
+        chip.classList.toggle("current", i === currentNumber);
       }
-    }
-
-    function drawNumber() {
-      if (remaining.length === 0) {
-        numberDisplay.textContent = "✓";
-        questionDisplay.textContent = "All 20 questions used — great work!";
-        clearTimer();
-        return;
-      }
-      const i = Math.floor(Math.random() * remaining.length);
-      current = remaining.splice(i, 1)[0];
-      numberDisplay.textContent = current;
-      questionDisplay.textContent = "Press Enter to reveal the question.";
-      revealed = false;
-      clearTimer();
-      timerDisplay.textContent = "";
-      updateGrid();
-    }
-
-    function revealQuestion() {
-      if (!current) return;
-      questionDisplay.textContent = questions[current];
-      revealed = true;
+      const used = 20 - remaining.length;
+      usedText.textContent = `Used: ${used} of 20`;
     }
 
     function clearTimer() {
       if (timer) clearInterval(timer);
       timer = null;
+      timerDisplay.classList.remove("running");
     }
 
     function startTimer() {
-      if (!revealed) return;
+      if (!currentNumber || !questionRevealed) return;
       clearTimer();
       timeLeft = 30;
       timerDisplay.textContent = timeLeft + "s";
+      timerDisplay.classList.add("running");
+
       timer = setInterval(() => {
         timeLeft--;
         if (timeLeft <= 0) {
+          timeLeft = 0;
           timerDisplay.textContent = "Time's up!";
           clearTimer();
         } else {
@@ -168,20 +419,77 @@
       }, 1000);
     }
 
-    document.addEventListener('keydown', e => {
-      if (e.code === 'Space') {
+    function drawNumber() {
+      if (remaining.length === 0) {
+        currentNumber = null;
+        numberDisplay.textContent = "✓";
+        questionDisplay.textContent = "All 20 questions have been used — thank you for reflecting together.";
+        clearTimer();
+        timerDisplay.textContent = "";
+        btnDraw.disabled = true;
+        return;
+      }
+
+      const index = Math.floor(Math.random() * remaining.length);
+      currentNumber = remaining.splice(index, 1)[0];
+
+      numberDisplay.textContent = currentNumber;
+      questionDisplay.textContent = "Press Enter (or click Reveal) to show the question for this number.";
+      questionRevealed = false;
+
+      clearTimer();
+      timerDisplay.textContent = "";
+      updateGrid();
+    }
+
+    function revealQuestion() {
+      if (!currentNumber) return;
+      questionDisplay.textContent = questions[currentNumber] || "No question set.";
+      questionRevealed = true;
+    }
+
+    function resetAll() {
+      remaining = Array.from({ length: 20 }, (_, i) => i + 1);
+      currentNumber = null;
+      questionRevealed = false;
+      numberDisplay.textContent = "–";
+      questionDisplay.textContent = "Draw a number first to reveal its matching reflection prompt.";
+      clearTimer();
+      timerDisplay.textContent = "";
+      btnDraw.disabled = false;
+      updateGrid();
+    }
+
+    // Button listeners
+    btnDraw.addEventListener("click", drawNumber);
+    btnReveal.addEventListener("click", revealQuestion);
+    btnStartTimer.addEventListener("click", startTimer);
+    btnReset.addEventListener("click", resetAll);
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", (e) => {
+      const active = document.activeElement;
+      const typing = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA");
+      if (typing) return;
+
+      if (e.code === "Space") {
         e.preventDefault();
         drawNumber();
-      } else if (e.key === 'Enter') {
+      } else if (e.key === "Enter") {
         e.preventDefault();
         revealQuestion();
-      } else if (e.key.toLowerCase() === 't') {
+      } else if (e.key.toLowerCase() === "t") {
         e.preventDefault();
         startTimer();
+      } else if (e.key.toLowerCase() === "r") {
+        e.preventDefault();
+        resetAll();
       }
     });
 
-    updateGrid();
+    // Init
+    buildGrid();
+    resetAll();
   </script>
 </body>
 </html>
