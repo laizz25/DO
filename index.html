@@ -13,7 +13,7 @@
 
     body {
       min-height: 100vh;
-      background: #f5efe3; /* warm earthy background */
+      background: #f5efe3; /* earthy background */
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -23,7 +23,7 @@
 
     .page {
       width: min(1100px, 100%);
-      background: rgba(255, 252, 246, 0.95);
+      background: rgba(255, 252, 246, 0.96);
       border-radius: 24px;
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
       padding: 24px 28px 32px;
@@ -31,8 +31,6 @@
       flex-direction: column;
       gap: 20px;
     }
-
-    /* Header */
 
     .eyebrow {
       font-size: 0.75rem;
@@ -61,8 +59,6 @@
       color: #73685a;
     }
 
-    /* Controls */
-
     .controls-row {
       display: flex;
       flex-wrap: wrap;
@@ -85,7 +81,7 @@
     }
 
     .btn-primary {
-      background: #2f6f4e; /* deep green */
+      background: #2f6f4e;
       color: #fdfaf5;
       border-color: #22533a;
     }
@@ -97,7 +93,7 @@
     }
 
     .btn-danger {
-      background: #b85c32; /* earthy terracotta */
+      background: #b85c32;
       color: #fffaf3;
       border-color: #944624;
     }
@@ -122,8 +118,6 @@
       margin: 0 2px;
     }
 
-    /* Layout: left content + right numbers panel */
-
     .main-layout {
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(0, 1.4fr);
@@ -136,8 +130,6 @@
         grid-template-columns: 1fr;
       }
     }
-
-    /* Left panel */
 
     .left-card {
       background: #fffaf3;
@@ -170,6 +162,7 @@
       justify-content: center;
       flex-direction: column;
       color: #28523b;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .number-circle::before {
@@ -178,6 +171,20 @@
       inset: 12%;
       border-radius: 50%;
       border: 2px dashed #d5c4aa;
+    }
+
+    .number-circle.drawing {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 4px rgba(47, 111, 78, 0.12);
+      animation: wobble 0.6s infinite;
+    }
+
+    @keyframes wobble {
+      0% { transform: scale(1.04) rotate(0deg); }
+      25% { transform: scale(1.06) rotate(1deg); }
+      50% { transform: scale(1.04) rotate(0deg); }
+      75% { transform: scale(1.06) rotate(-1deg); }
+      100% { transform: scale(1.04) rotate(0deg); }
     }
 
     .current-number {
@@ -196,8 +203,6 @@
     .timer.running {
       font-weight: 600;
     }
-
-    /* Question card */
 
     .question-card {
       width: 100%;
@@ -222,8 +227,6 @@
       line-height: 1.5;
       min-height: 48px;
     }
-
-    /* Right panel */
 
     .right-panel {
       background: #fdf8f1;
@@ -303,10 +306,10 @@
     </div>
 
     <div class="main-layout">
-      <!-- LEFT: Circle + Question -->
+      <!-- LEFT -->
       <div class="left-card">
         <div class="circle-wrapper">
-          <div class="number-circle">
+          <div id="circle" class="number-circle">
             <div id="numberDisplay" class="current-number">–</div>
             <div id="timerDisplay" class="timer"></div>
           </div>
@@ -320,7 +323,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: Numbers list -->
+      <!-- RIGHT -->
       <aside class="right-panel">
         <div class="right-title">Numbers (1–20)</div>
         <div id="numbersGrid" class="numbers-grid"></div>
@@ -330,7 +333,6 @@
   </div>
 
   <script>
-    // Questions linked to numbers 1–20 (your text)
     const questions = {
       1: "What is one new thing you learned about colonisation or cultural safety today?",
       2: "How did this topic change the way you think about your own culture or background?",
@@ -354,6 +356,7 @@
       20: "What is one small action you can take to help decolonise yourself — at uni, in practice, or in daily life?"
     };
 
+    const circle = document.getElementById("circle");
     const numberDisplay = document.getElementById("numberDisplay");
     const questionDisplay = document.getElementById("questionDisplay");
     const timerDisplay = document.getElementById("timerDisplay");
@@ -370,8 +373,8 @@
     let questionRevealed = false;
     let timer = null;
     let timeLeft = 30;
+    let isDrawing = false;
 
-    // Build number chips
     function buildGrid() {
       numbersGrid.innerHTML = "";
       for (let i = 1; i <= 20; i++) {
@@ -410,7 +413,6 @@
       timer = setInterval(() => {
         timeLeft--;
         if (timeLeft <= 0) {
-          timeLeft = 0;
           timerDisplay.textContent = "Time's up!";
           clearTimer();
         } else {
@@ -420,6 +422,7 @@
     }
 
     function drawNumber() {
+      if (isDrawing) return;
       if (remaining.length === 0) {
         currentNumber = null;
         numberDisplay.textContent = "✓";
@@ -430,16 +433,31 @@
         return;
       }
 
-      const index = Math.floor(Math.random() * remaining.length);
-      currentNumber = remaining.splice(index, 1)[0];
-
-      numberDisplay.textContent = currentNumber;
-      questionDisplay.textContent = "Press Enter (or click Reveal) to show the question for this number.";
-      questionRevealed = false;
-
+      isDrawing = true;
+      circle.classList.add("drawing");
       clearTimer();
       timerDisplay.textContent = "";
-      updateGrid();
+
+      // quick "rolling" preview
+      const previewInterval = 80; // ms
+      let rolling = setInterval(() => {
+        const temp = remaining[Math.floor(Math.random() * remaining.length)];
+        numberDisplay.textContent = temp;
+      }, previewInterval);
+
+      setTimeout(() => {
+        clearInterval(rolling);
+
+        const index = Math.floor(Math.random() * remaining.length);
+        currentNumber = remaining.splice(index, 1)[0];
+
+        numberDisplay.textContent = currentNumber;
+        questionDisplay.textContent = "Press Enter (or click Reveal) to show the question for this number.";
+        questionRevealed = false;
+        circle.classList.remove("drawing");
+        isDrawing = false;
+        updateGrid();
+      }, 900); // about 1 second of rolling
     }
 
     function revealQuestion() {
@@ -452,21 +470,21 @@
       remaining = Array.from({ length: 20 }, (_, i) => i + 1);
       currentNumber = null;
       questionRevealed = false;
+      isDrawing = false;
       numberDisplay.textContent = "–";
       questionDisplay.textContent = "Draw a number first to reveal its matching reflection prompt.";
+      circle.classList.remove("drawing");
       clearTimer();
       timerDisplay.textContent = "";
       btnDraw.disabled = false;
       updateGrid();
     }
 
-    // Button listeners
     btnDraw.addEventListener("click", drawNumber);
     btnReveal.addEventListener("click", revealQuestion);
     btnStartTimer.addEventListener("click", startTimer);
     btnReset.addEventListener("click", resetAll);
 
-    // Keyboard shortcuts
     document.addEventListener("keydown", (e) => {
       const active = document.activeElement;
       const typing = active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA");
@@ -487,7 +505,6 @@
       }
     });
 
-    // Init
     buildGrid();
     resetAll();
   </script>
